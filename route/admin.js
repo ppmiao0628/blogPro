@@ -51,5 +51,24 @@ module.exports = function () {
     router.get('/banners', (req, res)=>{
         res.render('admin/banner.ejs', {});
     });
+    router.post('/banners', (req, res)=>{
+        // res.send(req.body).end();
+        let title = req.body.title;
+        let description = req.body.description;
+        let href = req.body.href;
+        if (!title || !description || !href) {
+            res.status(400).send('arg err').end();
+        } else {
+            db.query(`INSERT INTO banner_table (title,description,href) VALUE ('${title}','${description}','${href}')`,(err, data)=>{
+                if (err){
+                    console.error(err);
+                    res.status(500).send('database insert err').end();
+                } else {
+                    res.redirect('/admin/banners');
+                }
+            });
+        }
+    });
+
     return router;
 };
