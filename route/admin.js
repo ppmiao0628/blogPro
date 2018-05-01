@@ -49,6 +49,20 @@ module.exports = function () {
         res.render('admin/index.ejs',{});
     });
     router.get('/banners', (req, res)=>{
+        switch(req.query.act){
+            case 'mod':
+                break;
+            case 'del':
+                db.query(`DELETE FROM banner_table WHERE ID=${req.query.id}`,(err, data)=>{
+                    if (err){
+                        console.error(err);
+                        res.status(500).send('database query err').end();
+                    } else {
+                        res.redirect('/admin/banners');
+                    }
+                });
+                break;
+        }
         let bannerObj = {};
         db.query(`SELECT * FROM banner_table`,(err, data)=>{
             if (err){
