@@ -49,7 +49,20 @@ module.exports = function () {
         res.render('admin/index.ejs',{});
     });
     router.get('/banners', (req, res)=>{
-        res.render('admin/banner.ejs', {});
+        let bannerObj = {};
+        db.query(`SELECT * FROM banner_table`,(err, data)=>{
+            if (err){
+                console.error(err);
+                res.status(500).send('database query err').end();
+            } else {
+                if (data.length>0){
+                    bannerObj = data;
+                } else {
+                    res.status(200).send('database is null').end();
+                }
+                res.render('admin/banner.ejs', {bannerObj:bannerObj});
+            }
+        });
     });
     router.post('/banners', (req, res)=>{
         // res.send(req.body).end();
@@ -61,7 +74,7 @@ module.exports = function () {
         } else {
             db.query(`INSERT INTO banner_table (title,description,href) VALUE ('${title}','${description}','${href}')`,(err, data)=>{
                 if (err){
-                    console.error(err);
+                    console.error('this is err:'+err);
                     res.status(500).send('database insert err').end();
                 } else {
                     res.redirect('/admin/banners');
