@@ -1,4 +1,5 @@
 const express = require('express');
+const common = require('../libs/common');
 
 module.exports = function () {
     let router = express.Router();
@@ -15,7 +16,8 @@ module.exports = function () {
             next();
         }
     });
-    router.get('/login', function (req, res) {
+    router.use('/login', function (req, res) {
+        console.log(req.body);
         res.render('admin/login.ejs', {});
     });
 

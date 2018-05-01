@@ -7,14 +7,15 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const consolidate = require('consolidate');
 const expressRoute = require('express-route');
+const bodyParser = require('body-parser');
 
 let server = express();
 server.listen(8090);
 
 // 获取请求数据
 //get
+server.use(bodyParser.urlencoded());
 server.use(multerObj.any());
-
 // 获取cookie、session
 server.use(cookieParser());
 (function () {
