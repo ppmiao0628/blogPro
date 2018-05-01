@@ -1,5 +1,8 @@
 const express = require('express');
+const mysql = require('mysql');
 const common = require('../libs/common');
+
+let db = mysql.createPool({host: 'localhost', user: 'root', password: 'ppm', database: 'blogdatabase'});
 
 module.exports = function () {
     let router = express.Router();
@@ -16,10 +19,34 @@ module.exports = function () {
             next();
         }
     });
-    router.use('/login', function (req, res) {
-        console.log(req.body);
+
+    router.get('/login', function (req, res) {
         res.render('admin/login.ejs', {});
     });
 
+    router.use('/login', function (req, res) {
+        // console.log(req.body);
+        let username = req.body.username;
+        let password = common.md5(req.body.password);
+        db.query(`SELECT * FROM admin_table WHERE username='${username}'`, (err, data) => {
+            if (err) {
+                res.status(500).send('database error').end();
+            } else {
+                if (data.length > 0) {
+                    if (data[0].password == password){
+                        req.session['admin_id'] = data[0].ID;
+                        res.redirect('/admin/');
+                    } else {
+                        res.status(400).send('password is wrong').end();
+                    }
+                } else {
+                    res.status(502).send('database is null').end();
+                }
+            }
+        });
+    });
+    router.get('/',(req, res) => {
+        res.send('success').end();
+    });
     return router;
 };
