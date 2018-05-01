@@ -46,7 +46,10 @@ module.exports = function () {
         });
     });
     router.get('/',(req, res) => {
-        res.send('success').end();
+        res.render('admin/index.ejs',{});
+    });
+    router.get('/banners', (req, res)=>{
+        res.render('admin/banner.ejs', {});
     });
     return router;
 };
