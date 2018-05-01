@@ -35,8 +35,8 @@ server.set('views', 'template');
 server.set('view engine', 'html');
 
 // route
-// server.use('/article/', require('./route/route1.js')());
-// server.use('/blog/', require('./route/route2.js')());
+server.use('/', require('./route/web.js')());
+server.use('/admin', require('./route/admin.js')());
 
 
 // default、static
